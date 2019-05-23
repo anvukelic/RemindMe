@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Remind Me</string>
+    <string name="nav_log_out">Logout</string>
+    <string name="user_full_name">John Doe</string>
+    <string name="user_email">john.doe@gmail.com</string>
+    <string name="remind_me_for">Remind me for:</string>
+    <string name="date_to_remind">Date to remind</string>
+    <string name="remind_input_hint">What do I need to remind you for?</string>
 </resources>
