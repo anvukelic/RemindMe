@@ -3,12 +3,23 @@ package com.avukelic.remindme.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Reminder implements Parcelable {
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+@Entity(tableName = "reminder")
+public class Reminder implements Parcelable{
+
+    @PrimaryKey
+    @ColumnInfo(name = "reminderId")
     private String id;
+    @ColumnInfo(name = "task")
     private String task;
+    @ColumnInfo(name = "taskTitle")
     private String taskTitle;
+    @ColumnInfo(name = "deadline")
     private int deadLine;
+    @ColumnInfo(name = "priority")
     private Priority priority;
 
     public Reminder(String id, String task, String taskTitle, int deadLine, Priority priority) {
@@ -18,6 +29,26 @@ public class Reminder implements Parcelable {
         this.deadLine = deadLine;
         this.priority = priority;
     }
+
+    protected Reminder(Parcel in) {
+        id = in.readString();
+        task = in.readString();
+        taskTitle = in.readString();
+        deadLine = in.readInt();
+        priority = Priority.valueOf(in.readString());
+    }
+
+    public static final Creator<Reminder> CREATOR = new Creator<Reminder>() {
+        @Override
+        public Reminder createFromParcel(Parcel in) {
+            return new Reminder(in);
+        }
+
+        @Override
+        public Reminder[] newArray(int size) {
+            return new Reminder[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -59,26 +90,6 @@ public class Reminder implements Parcelable {
         this.taskTitle = taskTitle;
     }
 
-    protected Reminder(Parcel in) {
-        id = in.readString();
-        task = in.readString();
-        taskTitle = in.readString();
-        deadLine = in.readInt();
-        priority = Priority.values()[in.readInt()-1];
-    }
-
-    public static final Creator<Reminder> CREATOR = new Creator<Reminder>() {
-        @Override
-        public Reminder createFromParcel(Parcel in) {
-            return new Reminder(in);
-        }
-
-        @Override
-        public Reminder[] newArray(int size) {
-            return new Reminder[size];
-        }
-    };
-
     @Override
     public int describeContents() {
         return 0;
@@ -90,8 +101,9 @@ public class Reminder implements Parcelable {
         dest.writeString(task);
         dest.writeString(taskTitle);
         dest.writeInt(deadLine);
-        dest.writeInt(priority.getType());
+        dest.writeString(priority.name());
     }
+
 
     public enum Priority {
         LOW(1),
@@ -100,7 +112,7 @@ public class Reminder implements Parcelable {
 
         private int type;
 
-        private Priority(int type) {
+        Priority(int type) {
             this.type = type;
         }
 

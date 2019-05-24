@@ -14,4 +14,8 @@
     <string name="time">%d:%d</string>
     <string name="new_reminder_added">You have new reminder</string>
     <string name="notification_switch_label">Notify me 2 hours before deadline</string>
+    <string name="priority_label">What is the priority for this reminder?</string>
+    <string name="priority_low">Low</string>
+    <string name="priority_high">High</string>
+    <string name="priority_medium">Medium</string>
 </resources>

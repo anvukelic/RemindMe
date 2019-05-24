@@ -6,13 +6,13 @@ import android.widget.ImageView;
 
 import androidx.core.content.ContextCompat;
 
-import com.bumptech.glide.Glide;
+import com.avukelic.remindme.di.module.GlideApp;
 import com.bumptech.glide.request.RequestOptions;
 
 public class GlideUtil {
 
     public static void loadColor(Context context, ImageView imageView, int color){
-        Glide.with(context)
+        GlideApp.with(context)
                 .load(new ColorDrawable(ContextCompat.getColor(context, color)))
                 .apply(new RequestOptions().circleCrop())
                 .into(imageView);

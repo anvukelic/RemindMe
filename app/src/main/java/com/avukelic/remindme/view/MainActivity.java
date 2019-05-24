@@ -1,9 +1,10 @@
 package com.avukelic.remindme.view;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.view.MenuItem;
 
-
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import com.avukelic.remindme.view.reminders.AddNewReminderActivity;
 import com.avukelic.remindme.view.reminders.ReminderAdapter;
 import com.avukelic.remindme.widgets.DrawerBottomSheet;
 import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,8 @@ public class MainActivity extends BaseActivity implements DrawerBottomSheet.Draw
     private ReminderAdapter reminderAdapter;
 
     //region ButterKnife
+    @BindView(R.id.fab_add_reminder)
+    FloatingActionButton fabAdd;
     @BindView(R.id.bottom_app_bar)
     BottomAppBar bottomAppBar;
     @BindView(R.id.rv_reminders)
@@ -55,6 +59,12 @@ public class MainActivity extends BaseActivity implements DrawerBottomSheet.Draw
         initRecyclerView();
     }
 
+
+    private void initToolbar() {
+        toolbar.setTitle(R.string.app_name);
+        setSupportActionBar(bottomAppBar);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -66,10 +76,6 @@ public class MainActivity extends BaseActivity implements DrawerBottomSheet.Draw
         return super.onOptionsItemSelected(item);
     }
 
-    private void initToolbar() {
-        toolbar.setTitle(R.string.app_name);
-        setSupportActionBar(bottomAppBar);
-    }
 
     private void initRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));

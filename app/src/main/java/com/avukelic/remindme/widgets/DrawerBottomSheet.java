@@ -43,7 +43,7 @@ public class DrawerBottomSheet extends BottomSheetDialogFragment {
         super.onActivityCreated(savedInstanceState);
         navigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()){
-
+                // TODO: 24.5.2019. finish this
             }
             return false;
         });

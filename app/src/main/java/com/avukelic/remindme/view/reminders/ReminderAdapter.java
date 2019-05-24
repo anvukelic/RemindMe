@@ -1,5 +1,6 @@
 package com.avukelic.remindme.view.reminders;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnItemClick;
 
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder> {
@@ -71,6 +74,11 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         @BindView(R.id.priority_box)
         ImageView priorityBox;
         //endregion
+
+        @OnClick
+        void onItemClick() {
+            Log.d("testiranje","test");
+        }
 
         ReminderViewHolder(View itemView) {
             super(itemView);

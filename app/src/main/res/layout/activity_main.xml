@@ -15,6 +15,7 @@
         android:id="@+id/main_coordinator"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:animateLayoutChanges="true"
         android:background="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_main">
@@ -33,6 +34,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorAccent"
             android:elevation="@dimen/elevation_small"
+            app:fabSize="mini"
             app:backgroundTint="@color/colorPrimary"
             app:borderWidth="0dp"
             app:layout_anchor="@id/bottom_app_bar"

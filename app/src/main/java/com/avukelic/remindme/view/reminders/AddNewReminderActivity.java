@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -24,11 +25,15 @@ import com.avukelic.remindme.R;
 import com.avukelic.remindme.base.BaseActivity;
 import com.avukelic.remindme.model.Reminder;
 import com.avukelic.remindme.util.DateUtil;
+import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.UUID;
 
 import butterknife.BindView;
+import butterknife.BindViews;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 public class AddNewReminderActivity extends BaseActivity implements DatePickerDialog.OnDateSetListener,
@@ -52,6 +57,15 @@ public class AddNewReminderActivity extends BaseActivity implements DatePickerDi
     TextView remindMeOnTime;
     @BindView(R.id.switch_push_notification_reminder)
     SwitchCompat notificationSwitch;
+    @BindViews({R.id.cb_priority_low, R.id.cb_priority_medium, R.id.cb_priority_high})
+    List<MaterialCheckBox> priorityCheckBoxes;
+
+    @OnClick({R.id.cb_priority_low, R.id.cb_priority_medium, R.id.cb_priority_high})
+    void onPriorityChanged(View view) {
+        for (MaterialCheckBox priorityCheckBox : priorityCheckBoxes) {
+            priorityCheckBox.setChecked(priorityCheckBox.getId() == view.getId());
+        }
+    }
 
     @OnClick({R.id.tv_remind_me_on_date, R.id.tv_remind_me_on_time})
     void onDateClick(View view) {

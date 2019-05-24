@@ -4,13 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/margin_small"
+    android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
     app:cardCornerRadius="8dp"
     app:cardElevation="@dimen/elevation_small">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
         android:padding="@dimen/padding_default">
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -38,6 +41,7 @@
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:layout_marginStart="@dimen/margin_small"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/taskTitle"
             app:layout_constraintTop_toTopOf="parent" />
