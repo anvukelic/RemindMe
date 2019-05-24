@@ -3,6 +3,7 @@ package com.avukelic.remindme.view.reminders;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.avukelic.remindme.R;
 import com.avukelic.remindme.model.Reminder;
+import com.avukelic.remindme.util.GlideUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,10 +64,12 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     class ReminderViewHolder extends RecyclerView.ViewHolder {
 
         //region ButterKnife
-        @BindView(R.id.task)
+        @BindView(R.id.taskTitle)
         AppCompatTextView task;
         @BindView(R.id.deadline)
         AppCompatTextView deadline;
+        @BindView(R.id.priority_box)
+        ImageView priorityBox;
         //endregion
 
         ReminderViewHolder(View itemView) {
@@ -73,9 +77,20 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             ButterKnife.bind(this, itemView);
         }
 
-        void setData(Reminder reminder){
-            task.setText(reminder.getTask());
+        void setData(Reminder reminder) {
+            task.setText(reminder.getTaskTitle());
             deadline.setText(String.valueOf(reminder.getDeadLine()));
+            switch (reminder.getPriority()) {
+                case LOW:
+                    GlideUtil.loadColor(itemView.getContext(), priorityBox, R.color.colorPriorityLow);
+                    break;
+                case MEDIUM:
+                    GlideUtil.loadColor(itemView.getContext(), priorityBox, R.color.colorPriorityMedium);
+                    break;
+                case HIGH:
+                    GlideUtil.loadColor(itemView.getContext(), priorityBox, R.color.colorPriorityHigh);
+                    break;
+            }
         }
     }
 

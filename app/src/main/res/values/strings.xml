@@ -6,4 +6,12 @@
     <string name="remind_me_for">Remind me for:</string>
     <string name="date_to_remind">Date to remind</string>
     <string name="remind_input_hint">What do I need to remind you for?</string>
+    <string name="task_title_hint">Task title</string>
+    <string name="empty_input_field">Field can not be empty</string>
+    <string name="remind_me_on_date">Remind me on date</string>
+    <string name="date_pick_error_message_before">Date can not be before today</string>
+    <string name="remind_me_on_time">Time</string>
+    <string name="time">%d:%d</string>
+    <string name="new_reminder_added">You have new reminder</string>
+    <string name="notification_switch_label">Notify me 2 hours before deadline</string>
 </resources>

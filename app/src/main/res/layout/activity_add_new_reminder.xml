@@ -28,17 +28,74 @@
             android:padding="@dimen/padding_default">
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/input_add_new_reminder"
+                android:id="@+id/input_title_add_new"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:hint="@string/task_title_hint"
+                android:maxLength="30"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/darker_gray"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/input_task_add_new_reminder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_default"
+                android:background="@android:color/transparent"
                 android:gravity="top|start"
                 android:hint="@string/remind_input_hint"
                 android:inputType="textMultiLine"
-                android:minLines="3"
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/darker_gray"
                 android:textSize="@dimen/text_default"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/input_title_add_new" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_remind_me_on_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/ic_action_dropdown"
+                android:hint="@string/remind_me_on_date"
+                android:paddingTop="@dimen/padding_default"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="@dimen/text_default"
+                app:layout_constraintTop_toBottomOf="@id/input_task_add_new_reminder" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_remind_me_on_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/ic_action_dropdown"
+                android:hint="@string/remind_me_on_time"
+                android:paddingTop="@dimen/padding_default"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="@dimen/text_default"
+                app:layout_constraintTop_toBottomOf="@id/tv_remind_me_on_date" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_switch_push_notification_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_default"
+                android:hint="@string/notification_switch_label"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="@dimen/text_default"
+                app:layout_constraintBottom_toBottomOf="@id/switch_push_notification_reminder"
+                app:layout_constraintEnd_toStartOf="@id/switch_push_notification_reminder"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/switch_push_notification_reminder" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_push_notification_reminder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/SwitchCompatTheme"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_remind_me_on_time" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

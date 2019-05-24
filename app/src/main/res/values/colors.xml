@@ -3,4 +3,13 @@
     <color name="colorPrimary">#2196F3</color>
     <color name="colorPrimaryDark">#1971B4</color>
     <color name="colorAccent">#FF6666</color>
+    <color name="colorPriorityLow">#2196F3</color>
+    <color name="colorPriorityMedium">#FF5722</color>
+    <color name="colorPriorityHigh">#FF1414</color>
+    <color name="colorTask">#2E2E2E</color>
+    <color name="colorTaskDeadline">#797979</color>
+    <color name="colorSwitchTrack">#D6D6D6</color>
+    <color name="colorSwitchTrackDeactivated">#B6B6B6</color>
+
+
 </resources>

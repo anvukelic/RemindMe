@@ -1,6 +1,7 @@
 package com.avukelic.remindme.base;
 
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -9,8 +10,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import butterknife.ButterKnife;
 
@@ -37,7 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected void shortToast(String message){
+    protected void shortToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
