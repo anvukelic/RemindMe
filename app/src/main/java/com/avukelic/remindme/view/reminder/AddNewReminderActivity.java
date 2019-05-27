@@ -1,7 +1,6 @@
-package com.avukelic.remindme.view.reminders;
+package com.avukelic.remindme.view.reminder;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
@@ -20,19 +19,17 @@ import android.widget.Toast;
 import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 
 import com.avukelic.remindme.R;
 import com.avukelic.remindme.alarm.ReminderAlarm;
 import com.avukelic.remindme.base.BaseActivity;
-import com.avukelic.remindme.model.Reminder;
+import com.avukelic.remindme.data.model.Reminder;
 import com.avukelic.remindme.util.DateUtil;
+import com.avukelic.remindme.util.TextUtil;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -99,7 +96,7 @@ public class AddNewReminderActivity extends BaseActivity implements DatePickerDi
     @Override
     protected void initUI() {
         root.requestFocus();
-        initToolbar(toolbar, true, "New reminder");
+        initToolbar(toolbar, true, this.getString(R.string.new_reminder_toolbar_title));
     }
 
     @Override
@@ -114,10 +111,10 @@ public class AddNewReminderActivity extends BaseActivity implements DatePickerDi
             onBackPressed();
             return super.onOptionsItemSelected(item);
         }
-        boolean inputError = isInputValid(taskInput)
-                | isInputValid(titleInput)
-                | isInputValid(remindMeOnDate)
-                | isInputValid(remindMeOnTime);
+        boolean inputError = TextUtil.isInputValid(this, taskInput)
+                | TextUtil.isInputValid(this, titleInput)
+                | TextUtil.isInputValid(this, remindMeOnDate)
+                | TextUtil.isInputValid(this, remindMeOnTime);
         if (!inputError) {
             if (item.getItemId() == R.id.add_reminder) {
                 Intent returnIntent = new Intent();
@@ -136,26 +133,16 @@ public class AddNewReminderActivity extends BaseActivity implements DatePickerDi
     //region Time picker
     private void openTimePicker() {
         String[] time = remindMeOnTime.getText().toString().split(":");
-        int hour = isEditTextEmpty(remindMeOnTime) ? 8 : Integer.parseInt(time[0]);
-        int minute = isEditTextEmpty(remindMeOnTime) ? 0 : Integer.parseInt(time[1]);
+        int hour = TextUtil.isEditTextEmpty(remindMeOnTime) ? 8 : Integer.parseInt(time[0]);
+        int minute = TextUtil.isEditTextEmpty(remindMeOnTime) ? 0 : Integer.parseInt(time[1]);
         TimePickerDialog timePickerDialog = new TimePickerDialog(this, R.style.DialogTheme, this, hour, minute, true);
         timePickerDialog.show();
-        setAlertDialogButtons(timePickerDialog);
+        TextUtil.setAlertDialogButtons(this, timePickerDialog);
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        StringBuilder stringBuilder = new StringBuilder();
-        if (hourOfDay < 10) {
-            stringBuilder.append("0");
-        }
-        stringBuilder.append(hourOfDay);
-        stringBuilder.append(":");
-        if (minute < 10) {
-            stringBuilder.append("0");
-        }
-        stringBuilder.append(minute);
-        remindMeOnTime.setText(stringBuilder.toString());
+        remindMeOnTime.setText(TextUtil.formatTime(hourOfDay, minute));
         remindMeOnTime.setError(null);
     }
     //endregion
@@ -171,32 +158,15 @@ public class AddNewReminderActivity extends BaseActivity implements DatePickerDi
         datePickerDialog.setOnCancelListener(this);
         datePickerDialog.setOnDismissListener(this);
         datePickerDialog.show();
-        setAlertDialogButtons(datePickerDialog);
+        TextUtil.setAlertDialogButtons(this, datePickerDialog);
     }
 
-    private void setAlertDialogButtons(AlertDialog dialog) {
-        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundColor(ContextCompat.getColor(this, android.R.color.white));
-        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setBackgroundColor(ContextCompat.getColor(this, android.R.color.white));
-        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
-        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
-    }
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(year);
-        stringBuilder.append("-");
-        if (month < 9) {
-            stringBuilder.append("0");
-        }
-        stringBuilder.append(month + 1);
-        stringBuilder.append("-");
-        if (dayOfMonth < 10) {
-            stringBuilder.append("0");
-        }
-        stringBuilder.append(dayOfMonth);
-        if (!DateUtil.isPickedDayBeforeToday(stringBuilder.toString())) {
-            remindMeOnDate.setText(stringBuilder.toString());
+        String date = TextUtil.formatDate(year, month, dayOfMonth);
+        if (!DateUtil.isPickedDayBeforeToday(date)) {
+            remindMeOnDate.setText(date);
             remindMeOnDate.setError(null);
         } else {
             Toast.makeText(this, R.string.date_pick_error_message_before, Toast.LENGTH_SHORT).show();
@@ -213,39 +183,30 @@ public class AddNewReminderActivity extends BaseActivity implements DatePickerDi
     }
     //endregion
 
+    @Override
+    protected void initViewModel() {
+
+    }
+
     //Create reminder object and set alarm for notification
     private Reminder getReminder() throws ParseException {
         long time = DateUtil.parseDateFromString(getDateTime());
-        String id = UUID.randomUUID().toString();
-        if (notificationSwitch.isChecked()) {
-            Bundle bundle = new Bundle();
-            bundle.putString(NEW_REMINDER_ID_KEY, id);
-            bundle.putString(NEW_REMINDER_TITLE_KEY, titleInput.getText().toString().trim());
-            new ReminderAlarm(this, bundle, time);
-        }
-        return new Reminder(id,
-                taskInput.getText().toString().trim(),
+        Reminder reminder = new Reminder(taskInput.getText().toString().trim(),
                 titleInput.getText().toString().trim(),
                 time,
                 priority);
+        if (notificationSwitch.isChecked()) {
+            Bundle bundle = new Bundle();
+            bundle.putInt(NEW_REMINDER_ID_KEY, reminder.getId());
+            bundle.putString(NEW_REMINDER_TITLE_KEY, titleInput.getText().toString().trim());
+            new ReminderAlarm(this, bundle, time);
+        }
+        return reminder;
 
     }
 
     private String getDateTime() {
         return remindMeOnDate.getText().toString().trim() + " " + remindMeOnTime.getText().toString().trim();
-    }
-
-    private boolean isEditTextEmpty(TextView text) {
-        return text.getText().toString().trim().isEmpty();
-    }
-
-    private boolean isInputValid(TextView input) {
-        if (input.getText().toString().trim().isEmpty()) {
-            input.setError(getString(R.string.empty_input_field));
-            return true;
-        }
-        input.setError(null);
-        return false;
     }
 
 

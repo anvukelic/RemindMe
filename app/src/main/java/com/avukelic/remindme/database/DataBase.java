@@ -3,7 +3,7 @@ package com.avukelic.remindme.database;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-@androidx.room.Database(entities = { UserDaoModel.class}, version = 1, exportSchema = false)
+@androidx.room.Database(entities = { UserDaoModel.class}, version = 3, exportSchema = false)
 @TypeConverters(DataConverter.class)
 public abstract class DataBase extends RoomDatabase {
 

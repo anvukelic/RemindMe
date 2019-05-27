@@ -19,4 +19,7 @@
     <string name="priority_high">High</string>
     <string name="priority_medium">Medium</string>
     <string name="push_title">I am reminding you for</string>
+    <string name="single_reminder_toolbar_title">Reminder</string>
+    <string name="new_reminder_toolbar_title">New reminder</string>
+    <string name="login_not_successful">Username or password are incorrect</string>
 </resources>

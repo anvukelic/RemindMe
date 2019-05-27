@@ -1,4 +1,4 @@
-package com.avukelic.remindme.view.reminders;
+package com.avukelic.remindme.view.reminder;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,18 +11,16 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.avukelic.remindme.R;
-import com.avukelic.remindme.model.Reminder;
+import com.avukelic.remindme.data.model.Reminder;
 import com.avukelic.remindme.util.DateUtil;
 import com.avukelic.remindme.util.GlideUtil;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemClick;
 
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder> {

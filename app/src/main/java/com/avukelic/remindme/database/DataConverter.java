@@ -2,9 +2,8 @@ package com.avukelic.remindme.database;
 
 import androidx.room.TypeConverter;
 
-import com.avukelic.remindme.model.Reminder;
-import com.avukelic.remindme.model.Reminder.Priority;
-import com.avukelic.remindme.model.ReminderModel;
+import com.avukelic.remindme.data.model.Reminder.Priority;
+import com.avukelic.remindme.data.model.ReminderModel;
 import com.google.gson.Gson;
 
 import java.io.Serializable;

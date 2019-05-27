@@ -1,4 +1,4 @@
-package com.avukelic.remindme.model;
+package com.avukelic.remindme.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,9 +10,9 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "reminder")
 public class Reminder implements Parcelable{
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "reminderId")
-    private String id;
+    private int id;
     @ColumnInfo(name = "task")
     private String task;
     @ColumnInfo(name = "taskTitle")
@@ -22,8 +22,7 @@ public class Reminder implements Parcelable{
     @ColumnInfo(name = "priority")
     private Priority priority;
 
-    public Reminder(String id, String task, String taskTitle, long deadLine, Priority priority) {
-        this.id = id;
+    public Reminder(String task, String taskTitle, long deadLine, Priority priority) {
         this.task = task;
         this.taskTitle = taskTitle;
         this.deadLine = deadLine;
@@ -31,7 +30,7 @@ public class Reminder implements Parcelable{
     }
 
     protected Reminder(Parcel in) {
-        id = in.readString();
+        id = in.readInt();
         task = in.readString();
         taskTitle = in.readString();
         deadLine = in.readLong();
@@ -50,12 +49,8 @@ public class Reminder implements Parcelable{
         }
     };
 
-    public String getId() {
+    public int getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getTask() {
@@ -97,7 +92,7 @@ public class Reminder implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
+        dest.writeInt(id);
         dest.writeString(task);
         dest.writeString(taskTitle);
         dest.writeLong(deadLine);

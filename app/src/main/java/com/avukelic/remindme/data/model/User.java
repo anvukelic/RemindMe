@@ -1,4 +1,4 @@
-package com.avukelic.remindme.model;
+package com.avukelic.remindme.data.model;
 
 import com.avukelic.remindme.database.DaoMapper;
 import com.avukelic.remindme.database.UserDaoModel;
@@ -6,12 +6,12 @@ import com.avukelic.remindme.database.UserDaoModel;
 public class User implements DaoMapper<UserDaoModel> {
 
     private String id;
-    private String username;
+    private String email;
     private ReminderModel reminderModel;
 
-    public User(String id, String username, ReminderModel reminderModel) {
+    public User(String id, String email, ReminderModel reminderModel) {
         this.id = id;
-        this.username = username;
+        this.email = email;
         this.reminderModel = reminderModel;
     }
 
@@ -23,12 +23,12 @@ public class User implements DaoMapper<UserDaoModel> {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public ReminderModel getReminderModel() {
@@ -41,6 +41,6 @@ public class User implements DaoMapper<UserDaoModel> {
 
     @Override
     public UserDaoModel mapToDao() {
-        return new UserDaoModel(id, username, reminderModel);
+        return new UserDaoModel(id, email, reminderModel);
     }
 }

@@ -1,4 +1,4 @@
-package com.avukelic.remindme.model;
+package com.avukelic.remindme.data.model;
 
 import java.util.ArrayList;
 import java.util.List;

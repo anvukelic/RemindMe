@@ -1,10 +1,9 @@
 package com.avukelic.remindme.view;
 
-import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,16 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.avukelic.remindme.R;
 import com.avukelic.remindme.base.BaseActivity;
-import com.avukelic.remindme.model.Reminder;
-import com.avukelic.remindme.view.reminders.AddNewReminderActivity;
-import com.avukelic.remindme.view.reminders.ReminderAdapter;
+import com.avukelic.remindme.data.model.Reminder;
+import com.avukelic.remindme.view.reminder.AddNewReminderActivity;
+import com.avukelic.remindme.view.reminder.ReminderAdapter;
 import com.avukelic.remindme.widgets.DrawerBottomSheet;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -29,6 +27,11 @@ import butterknife.OnClick;
 public class MainActivity extends BaseActivity implements DrawerBottomSheet.DrawerBottomSheetActionCallback, ReminderAdapter.OnReminderClickListener {
 
     private ReminderAdapter reminderAdapter;
+
+    @Override
+    protected void initViewModel() {
+
+    }
 
     //region ButterKnife
     @BindView(R.id.fab_add_reminder)
@@ -47,6 +50,11 @@ public class MainActivity extends BaseActivity implements DrawerBottomSheet.Draw
 
     //endregion
 
+
+    public static void launchActivity(Context context){
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
+    }
 
     @Override
     protected int getLayout() {
@@ -83,18 +91,18 @@ public class MainActivity extends BaseActivity implements DrawerBottomSheet.Draw
         reminderAdapter.setListener(this);
         recyclerView.setAdapter(reminderAdapter);
         List<Reminder> reminders = new ArrayList<>();
-        reminders.add(new Reminder(UUID.randomUUID().toString(), "test", "test", 535353, Reminder.Priority.LOW));
-        reminders.add(new Reminder(UUID.randomUUID().toString(), "test2", "test", 5353535, Reminder.Priority.LOW));
-        reminders.add(new Reminder(UUID.randomUUID().toString(), "test3", "test", 5353536, Reminder.Priority.MEDIUM));
-        reminders.add(new Reminder(UUID.randomUUID().toString(), "test3", "test", 5353536, Reminder.Priority.LOW));
-        reminders.add(new Reminder(UUID.randomUUID().toString(), "test3", "test", 5353536, Reminder.Priority.HIGH));
-        reminders.add(new Reminder(UUID.randomUUID().toString(), "test3", "test", 5353536, Reminder.Priority.LOW));
-        reminders.add(new Reminder(UUID.randomUUID().toString(), "test3", "test", 5353536, Reminder.Priority.LOW));
-        reminders.add(new Reminder(UUID.randomUUID().toString(), "test3", "test", 5353536, Reminder.Priority.LOW));
-        reminders.add(new Reminder(UUID.randomUUID().toString(), "test3", "test", 5353536, Reminder.Priority.MEDIUM));
-        reminders.add(new Reminder(UUID.randomUUID().toString(), "test3", "test", 5353536, Reminder.Priority.LOW));
-        reminders.add(new Reminder(UUID.randomUUID().toString(), "test3", "test", 5353536, Reminder.Priority.MEDIUM));
-        reminders.add(new Reminder(UUID.randomUUID().toString(), "test3", "test", 5353536, Reminder.Priority.HIGH));
+        reminders.add(new Reminder( "test", "test", 535353, Reminder.Priority.LOW));
+        reminders.add(new Reminder( "test2", "test", 5353535, Reminder.Priority.LOW));
+        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.MEDIUM));
+        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.LOW));
+        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.HIGH));
+        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.LOW));
+        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.LOW));
+        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.LOW));
+        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.MEDIUM));
+        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.LOW));
+        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.MEDIUM));
+        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.HIGH));
         reminderAdapter.setReminders(reminders);
     }
 

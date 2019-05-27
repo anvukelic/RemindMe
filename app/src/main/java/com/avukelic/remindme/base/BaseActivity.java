@@ -25,12 +25,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(getLayout());
         ButterKnife.bind(this);
+        initViewModel();
         initUI();
     }
 
     protected abstract int getLayout();
 
     protected abstract void initUI();
+
+    protected abstract void initViewModel();
 
     protected void initToolbar(Toolbar toolbar, boolean homeEnabled, String title) {
         setSupportActionBar(toolbar);
