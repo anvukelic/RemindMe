@@ -12,9 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.avukelic.remindme.R;
 import com.avukelic.remindme.model.Reminder;
+import com.avukelic.remindme.util.DateUtil;
 import com.avukelic.remindme.util.GlideUtil;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -87,7 +89,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
         void setData(Reminder reminder) {
             task.setText(reminder.getTaskTitle());
-            deadline.setText(String.valueOf(reminder.getDeadLine()));
+            deadline.setText(DateUtil.parseDateFromLongToString(reminder.getDeadLine()));
             switch (reminder.getPriority()) {
                 case LOW:
                     GlideUtil.loadColor(itemView.getContext(), priorityBox, R.color.colorPriorityLow);

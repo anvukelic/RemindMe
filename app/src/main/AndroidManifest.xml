@@ -10,15 +10,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.MainActivity">
+        <activity android:name=".view.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.AddNewReminderFragment" />
-        <activity android:name=".view.reminders.AddNewReminderActivity" />
+
+        <activity android:name=".view.reminders.AddNewReminderActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".view.reminders.SingleReminderActivity"
+            android:screenOrientation="portrait"/>
+
+        <receiver android:name=".alarm.ReminderAlarm" />
     </application>
 
 </manifest>

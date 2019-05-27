@@ -18,11 +18,11 @@ public class Reminder implements Parcelable{
     @ColumnInfo(name = "taskTitle")
     private String taskTitle;
     @ColumnInfo(name = "deadline")
-    private int deadLine;
+    private long deadLine;
     @ColumnInfo(name = "priority")
     private Priority priority;
 
-    public Reminder(String id, String task, String taskTitle, int deadLine, Priority priority) {
+    public Reminder(String id, String task, String taskTitle, long deadLine, Priority priority) {
         this.id = id;
         this.task = task;
         this.taskTitle = taskTitle;
@@ -34,7 +34,7 @@ public class Reminder implements Parcelable{
         id = in.readString();
         task = in.readString();
         taskTitle = in.readString();
-        deadLine = in.readInt();
+        deadLine = in.readLong();
         priority = Priority.valueOf(in.readString());
     }
 
@@ -66,11 +66,11 @@ public class Reminder implements Parcelable{
         this.task = task;
     }
 
-    public int getDeadLine() {
+    public long getDeadLine() {
         return deadLine;
     }
 
-    public void setDeadLine(int deadLine) {
+    public void setDeadLine(long deadLine) {
         this.deadLine = deadLine;
     }
 
@@ -100,7 +100,7 @@ public class Reminder implements Parcelable{
         dest.writeString(id);
         dest.writeString(task);
         dest.writeString(taskTitle);
-        dest.writeInt(deadLine);
+        dest.writeLong(deadLine);
         dest.writeString(priority.name());
     }
 
