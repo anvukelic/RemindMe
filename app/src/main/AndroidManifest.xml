@@ -14,7 +14,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".view.MainActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".view.reminder.AddNewReminderActivity"
@@ -24,7 +24,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.authentication.LoginActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" />
+        <activity android:name=".view.authentication.RegisterActivity" />
+        <activity android:name=".view.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

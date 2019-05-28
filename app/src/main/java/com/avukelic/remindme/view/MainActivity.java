@@ -6,32 +6,34 @@ import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.avukelic.remindme.R;
+import com.avukelic.remindme.RemindMeApp;
 import com.avukelic.remindme.base.BaseActivity;
-import com.avukelic.remindme.data.model.Reminder;
+import com.avukelic.remindme.singleton.UserSingleton;
 import com.avukelic.remindme.view.reminder.AddNewReminderActivity;
 import com.avukelic.remindme.view.reminder.ReminderAdapter;
+import com.avukelic.remindme.view.reminder.ReminderViewModel;
+import com.avukelic.remindme.view.reminder.ReminderViewModelFactory;
 import com.avukelic.remindme.widgets.DrawerBottomSheet;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity implements DrawerBottomSheet.DrawerBottomSheetActionCallback, ReminderAdapter.OnReminderClickListener {
 
+    @Inject
+    public ReminderViewModelFactory reminderViewModelFactory;
+
     private ReminderAdapter reminderAdapter;
-
-    @Override
-    protected void initViewModel() {
-
-    }
+    private ReminderViewModel viewModel;
 
     //region ButterKnife
     @BindView(R.id.fab_add_reminder)
@@ -51,8 +53,16 @@ public class MainActivity extends BaseActivity implements DrawerBottomSheet.Draw
     //endregion
 
 
-    public static void launchActivity(Context context){
+    public static void launchActivity(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void launchActivityAndRemoveHistory(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
     }
 
@@ -67,6 +77,17 @@ public class MainActivity extends BaseActivity implements DrawerBottomSheet.Draw
         initRecyclerView();
     }
 
+    @Override
+    protected void initViewModel() {
+        RemindMeApp.getAppComponent().inject(this);
+        viewModel = ViewModelProviders.of(this, reminderViewModelFactory).get(ReminderViewModel.class);
+        observeData();
+        viewModel.getReminders();
+    }
+
+    private void observeData() {
+        viewModel.getMediatorLiveData().observe(this, reminders -> reminderAdapter.setReminders(reminders));
+    }
 
     private void initToolbar() {
         toolbar.setTitle(R.string.app_name);
@@ -90,7 +111,7 @@ public class MainActivity extends BaseActivity implements DrawerBottomSheet.Draw
         reminderAdapter = new ReminderAdapter();
         reminderAdapter.setListener(this);
         recyclerView.setAdapter(reminderAdapter);
-        List<Reminder> reminders = new ArrayList<>();
+        /*List<Reminder> reminders = new ArrayList<>();
         reminders.add(new Reminder( "test", "test", 535353, Reminder.Priority.LOW));
         reminders.add(new Reminder( "test2", "test", 5353535, Reminder.Priority.LOW));
         reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.MEDIUM));
@@ -103,17 +124,7 @@ public class MainActivity extends BaseActivity implements DrawerBottomSheet.Draw
         reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.LOW));
         reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.MEDIUM));
         reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.HIGH));
-        reminderAdapter.setReminders(reminders);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == AddNewReminderActivity.ADD_NEW_REMINDER_CODE) {
-            if (resultCode == RESULT_OK) {
-                reminderAdapter.addNewReminder(data.getParcelableExtra(AddNewReminderActivity.NEW_REMINDER_KEY));
-                shortToast(getString(R.string.new_reminder_added));
-            }
-        }
+        reminderAdapter.setReminders(reminders);*/
     }
 
     @Override

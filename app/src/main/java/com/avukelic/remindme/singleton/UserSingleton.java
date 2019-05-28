@@ -1,11 +1,13 @@
 package com.avukelic.remindme.singleton;
 
-import com.avukelic.remindme.database.UserDaoModel;
+import com.avukelic.remindme.data.model.User;
+import com.google.firebase.auth.FirebaseUser;
 
 public class UserSingleton {
 
     private static UserSingleton ourInstance;
-    private UserDaoModel user;
+    private User user;
+    private int lastReminderId;
 
     public static UserSingleton getInstance() {
         if (ourInstance == null) {
@@ -17,11 +19,23 @@ public class UserSingleton {
     private UserSingleton() {
     }
 
-    public UserDaoModel getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(UserDaoModel user) {
+    public void setUser(User user) {
         this.user = user;
+    }
+
+    public int getLastReminderId() {
+        return ++lastReminderId;
+    }
+
+    public void setLastReminderId(int lastReminderId) {
+        this.lastReminderId = lastReminderId;
+    }
+
+    public void setInitUser(FirebaseUser user){
+        this.user = new User(user.getUid(), user.getEmail());
     }
 }

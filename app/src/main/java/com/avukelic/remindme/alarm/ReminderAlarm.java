@@ -35,9 +35,9 @@ public class ReminderAlarm extends BroadcastReceiver {
         Intent intent = new Intent(context, ReminderAlarm.class);
         intent.putExtra(REMINDER_BUNDLE, extras);
         PendingIntent pendingIntent =
-                PendingIntent.getBroadcast(context, (int)timeToTrigger, intent,
+                PendingIntent.getBroadcast(context, extras.getInt(AddNewReminderActivity.NEW_REMINDER_ID_KEY), intent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmMgr.set(AlarmManager.RTC_WAKEUP, timeToTrigger,
+        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToTrigger,
                 pendingIntent);
     }
 

@@ -37,13 +37,6 @@
         android:text="login"
         android:textColor="@android:color/white" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/register_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_default"
-        android:layout_marginEnd="@dimen/margin_default"
-        android:text="create user"
-        android:textColor="@android:color/white" />
+
 
 </LinearLayout>

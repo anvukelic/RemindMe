@@ -1,18 +1,13 @@
 package com.avukelic.remindme.data.model;
 
-import com.avukelic.remindme.database.DaoMapper;
-import com.avukelic.remindme.database.UserDaoModel;
-
-public class User implements DaoMapper<UserDaoModel> {
+public class User {
 
     private String id;
     private String email;
-    private ReminderModel reminderModel;
 
-    public User(String id, String email, ReminderModel reminderModel) {
+    public User(String id, String email) {
         this.id = id;
         this.email = email;
-        this.reminderModel = reminderModel;
     }
 
     public String getId() {
@@ -31,16 +26,6 @@ public class User implements DaoMapper<UserDaoModel> {
         this.email = email;
     }
 
-    public ReminderModel getReminderModel() {
-        return reminderModel;
-    }
 
-    public void setReminderModel(ReminderModel reminderModel) {
-        this.reminderModel = reminderModel;
-    }
 
-    @Override
-    public UserDaoModel mapToDao() {
-        return new UserDaoModel(id, email, reminderModel);
-    }
 }

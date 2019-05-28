@@ -1,6 +1,5 @@
 package com.avukelic.remindme.view.authentication;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 

@@ -42,7 +42,7 @@
                 android:id="@+id/input_task_add_new_reminder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_default"
+                android:layout_marginTop="@dimen/margin_large"
                 android:background="@android:color/transparent"
                 android:gravity="top|start"
                 android:hint="@string/remind_input_hint"
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_action_dropdown"
                 android:hint="@string/remind_me_on_date"
-                android:paddingTop="@dimen/padding_default"
+                android:paddingTop="@dimen/padding_large"
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/darker_gray"
                 android:textSize="@dimen/text_default"
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_action_dropdown"
                 android:hint="@string/remind_me_on_time"
-                android:paddingTop="@dimen/padding_default"
+                android:paddingTop="@dimen/padding_large"
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/darker_gray"
                 android:textSize="@dimen/text_default"
@@ -92,6 +92,7 @@
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_push_notification_reminder"
                 style="@style/SwitchCompatTheme"
+                android:layout_marginTop="@dimen/margin_default"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -101,11 +102,11 @@
                 android:id="@+id/tv_priority_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_default"
+                android:layout_marginTop="@dimen/margin_large"
                 android:hint="@string/priority_label"
                 android:textColorHint="@android:color/darker_gray"
                 android:textSize="@dimen/text_default"
-                app:layout_constraintTop_toBottomOf="@id/switch_push_notification_reminder" />
+                app:layout_constraintTop_toBottomOf="@id/tv_switch_push_notification_label" />
 
 
             <androidx.appcompat.widget.LinearLayoutCompat

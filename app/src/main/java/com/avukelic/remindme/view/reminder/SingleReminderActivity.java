@@ -17,6 +17,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
 import com.avukelic.remindme.R;
+import com.avukelic.remindme.RemindMeApp;
 import com.avukelic.remindme.base.BaseActivity;
 import com.avukelic.remindme.data.model.Reminder;
 import com.avukelic.remindme.util.DateUtil;
@@ -86,7 +87,7 @@ public class SingleReminderActivity extends BaseActivity implements DatePickerDi
 
     @Override
     protected void initViewModel() {
-
+        RemindMeApp.getAppComponent().inject(this);
     }
 
     private void initData() {

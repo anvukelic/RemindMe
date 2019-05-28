@@ -17,11 +17,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class LoginActivity extends BaseActivity {
+public class RegisterActivity extends BaseActivity {
 
     @Inject
     public AuthViewModelFactory authViewModelFactory;
-
     private AuthViewModel authViewModel;
 
     //region ButterKnife
@@ -31,40 +30,35 @@ public class LoginActivity extends BaseActivity {
     AppCompatEditText password;
 
     @OnClick(R.id.login_button)
-    void loginUser() {
+    void createUser() {
         if (!TextUtil.isInputValid(this, email) & !TextUtil.isInputValid(this, password)) {
-            RemindMeApp.getFirebaseAuth().signInWithEmailAndPassword(email.getText().toString().trim(), password.getText().toString().trim())
+            RemindMeApp.getFirebaseAuth().createUserWithEmailAndPassword(email.getText().toString().trim(),
+                    password.getText().toString().trim())
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             authViewModel.saveUser();
-                            MainActivity.launchActivity(LoginActivity.this);
-                            finish();
+                            MainActivity.launchActivityAndRemoveHistory(RegisterActivity.this);
                         } else {
                             shortToast(getString(R.string.login_not_successful));
                         }
                     });
         }
     }
-
-    @OnClick(R.id.register_button)
-    void createUser() {
-        RegisterActivity.launchActivity(this);
-    }
-
     //endregion
 
     public static void launchActivity(Context context){
-        Intent intent = new Intent(context, LoginActivity.class);
+        Intent intent = new Intent(context, RegisterActivity.class);
         context.startActivity(intent);
     }
 
     @Override
     protected int getLayout() {
-        return R.layout.activity_login;
+        return R.layout.activity_register;
     }
 
     @Override
     protected void initUI() {
+
     }
 
     @Override
@@ -76,5 +70,4 @@ public class LoginActivity extends BaseActivity {
 
     private void observeData() {
     }
-
 }

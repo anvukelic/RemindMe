@@ -3,26 +3,20 @@ package com.avukelic.remindme.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
+import com.avukelic.remindme.singleton.UserSingleton;
 
-@Entity(tableName = "reminder")
-public class Reminder implements Parcelable{
+public class Reminder implements Parcelable {
 
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "reminderId")
+
     private int id;
-    @ColumnInfo(name = "task")
+
     private String task;
-    @ColumnInfo(name = "taskTitle")
     private String taskTitle;
-    @ColumnInfo(name = "deadline")
     private long deadLine;
-    @ColumnInfo(name = "priority")
     private Priority priority;
 
     public Reminder(String task, String taskTitle, long deadLine, Priority priority) {
+        id = UserSingleton.getInstance().getLastReminderId();
         this.task = task;
         this.taskTitle = taskTitle;
         this.deadLine = deadLine;
@@ -97,6 +91,9 @@ public class Reminder implements Parcelable{
         dest.writeString(taskTitle);
         dest.writeLong(deadLine);
         dest.writeString(priority.name());
+    }
+
+    public Reminder() {
     }
 
 

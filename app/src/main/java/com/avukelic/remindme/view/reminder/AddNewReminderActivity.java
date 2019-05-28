@@ -3,6 +3,7 @@ package com.avukelic.remindme.view.reminder;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,8 +20,10 @@ import android.widget.Toast;
 import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.avukelic.remindme.R;
+import com.avukelic.remindme.RemindMeApp;
 import com.avukelic.remindme.alarm.ReminderAlarm;
 import com.avukelic.remindme.base.BaseActivity;
 import com.avukelic.remindme.data.model.Reminder;
@@ -31,6 +34,8 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.OnClick;
@@ -38,12 +43,14 @@ import butterknife.OnClick;
 public class AddNewReminderActivity extends BaseActivity implements DatePickerDialog.OnDateSetListener,
         DialogInterface.OnCancelListener, DialogInterface.OnDismissListener, TimePickerDialog.OnTimeSetListener {
 
-    public static final int ADD_NEW_REMINDER_CODE = 100;
-    public static final String NEW_REMINDER_KEY = AddNewReminderActivity.class.getSimpleName() + ".new_reminder";
     public static final String NEW_REMINDER_ID_KEY = AddNewReminderActivity.class.getSimpleName() + ".new_reminder_id";
     public static final String NEW_REMINDER_TITLE_KEY = AddNewReminderActivity.class.getSimpleName() + ".new_reminder_title";
 
+    @Inject
+    public ReminderViewModelFactory reminderViewModelFactory;
+    private ReminderViewModel viewModel;
     private Reminder.Priority priority = Reminder.Priority.LOW;
+
 
     //region ButterKnife
     @BindView(R.id.toolbar_new_reminder)
@@ -83,9 +90,9 @@ public class AddNewReminderActivity extends BaseActivity implements DatePickerDi
 
     //endregion
 
-    public static void launchActivityForResult(Activity activity) {
-        Intent intent = new Intent(activity, AddNewReminderActivity.class);
-        activity.startActivityForResult(intent, ADD_NEW_REMINDER_CODE);
+    public static void launchActivityForResult(Context context) {
+        Intent intent = new Intent(context, AddNewReminderActivity.class);
+        context.startActivity(intent);
     }
 
     @Override
@@ -100,6 +107,12 @@ public class AddNewReminderActivity extends BaseActivity implements DatePickerDi
     }
 
     @Override
+    protected void initViewModel() {
+        RemindMeApp.getAppComponent().inject(this);
+        viewModel = ViewModelProviders.of(this, reminderViewModelFactory).get(ReminderViewModel.class);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_new_reminder, menu);
         return super.onCreateOptionsMenu(menu);
@@ -111,23 +124,27 @@ public class AddNewReminderActivity extends BaseActivity implements DatePickerDi
             onBackPressed();
             return super.onOptionsItemSelected(item);
         }
-        boolean inputError = TextUtil.isInputValid(this, taskInput)
-                | TextUtil.isInputValid(this, titleInput)
-                | TextUtil.isInputValid(this, remindMeOnDate)
-                | TextUtil.isInputValid(this, remindMeOnTime);
-        if (!inputError) {
-            if (item.getItemId() == R.id.add_reminder) {
-                Intent returnIntent = new Intent();
+
+        if (item.getItemId() == R.id.add_reminder) {
+            boolean inputError = TextUtil.isInputValid(this, taskInput)
+                    | TextUtil.isInputValid(this, titleInput)
+                    | TextUtil.isInputValid(this, remindMeOnDate)
+                    | TextUtil.isInputValid(this, remindMeOnTime);
+            if (!inputError) {
                 try {
-                    returnIntent.putExtra(NEW_REMINDER_KEY, getReminder());
+                    viewModel.addReminder(getReminder()).observeSingle(this, reminder -> {
+                        shortToast(getString(R.string.new_reminder_added));
+                        finish();
+                    });
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                setResult(Activity.RESULT_OK, returnIntent);
-                finish();
             }
         }
-        return super.onOptionsItemSelected(item);
+        return super.
+
+                onOptionsItemSelected(item);
+
     }
 
     //region Time picker
@@ -183,10 +200,6 @@ public class AddNewReminderActivity extends BaseActivity implements DatePickerDi
     }
     //endregion
 
-    @Override
-    protected void initViewModel() {
-
-    }
 
     //Create reminder object and set alarm for notification
     private Reminder getReminder() throws ParseException {
@@ -199,7 +212,7 @@ public class AddNewReminderActivity extends BaseActivity implements DatePickerDi
             Bundle bundle = new Bundle();
             bundle.putInt(NEW_REMINDER_ID_KEY, reminder.getId());
             bundle.putString(NEW_REMINDER_TITLE_KEY, titleInput.getText().toString().trim());
-            new ReminderAlarm(this, bundle, time);
+            new ReminderAlarm(this, bundle, time /*- 120000*/);
         }
         return reminder;
 

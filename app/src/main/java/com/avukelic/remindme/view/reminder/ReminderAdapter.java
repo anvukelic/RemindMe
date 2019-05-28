@@ -16,6 +16,7 @@ import com.avukelic.remindme.util.DateUtil;
 import com.avukelic.remindme.util.GlideUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,6 +32,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     public void setReminders(List<Reminder> newReminders) {
         reminders.clear();
         reminders.addAll(newReminders);
+        Collections.reverse(reminders);
         notifyDataSetChanged();
     }
 
@@ -77,7 +79,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
         @OnClick
         void onItemClick() {
-            Log.d("testiranje","test");
+            listener.onReminderClick(getAdapterPosition());
         }
 
         ReminderViewHolder(View itemView) {
