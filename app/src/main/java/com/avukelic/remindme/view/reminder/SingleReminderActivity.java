@@ -41,6 +41,7 @@ import butterknife.BindViews;
 import butterknife.OnClick;
 
 import static com.avukelic.remindme.view.reminder.AddNewReminderActivity.NEW_REMINDER_ID_KEY;
+import static com.avukelic.remindme.view.reminder.AddNewReminderActivity.NEW_REMINDER_PRIORITY_KEY;
 import static com.avukelic.remindme.view.reminder.AddNewReminderActivity.NEW_REMINDER_TITLE_KEY;
 
 public class SingleReminderActivity extends BaseActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -75,7 +76,9 @@ public class SingleReminderActivity extends BaseActivity implements DatePickerDi
     void onPriorityChanged(View view) {
         for (AppCompatRadioButton priorityCheckBox : priorityCheckBoxes) {
             priorityCheckBox.setChecked(view.getId() == priorityCheckBox.getId());
-            priority = Reminder.Priority.values()[priorityCheckBoxes.indexOf(priorityCheckBox)];
+            if (view.getId() == priorityCheckBox.getId()) {
+                priority = Reminder.Priority.values()[priorityCheckBoxes.indexOf(priorityCheckBox)];
+            }
         }
 
     }
@@ -221,12 +224,6 @@ public class SingleReminderActivity extends BaseActivity implements DatePickerDi
         initialReminder.setDeadLine(time);
         initialReminder.setNotificationEnabled(notificationSwitch.isChecked());
         initialReminder.setPriority(priority);
-        if (notificationSwitch.isChecked()) {
-            Bundle bundle = new Bundle();
-            bundle.putInt(NEW_REMINDER_ID_KEY, initialReminder.getId());
-            bundle.putString(NEW_REMINDER_TITLE_KEY, titleInput.getText().toString().trim());
-            new ReminderAlarm(this, bundle, time /*- 120000*/, initialReminder.isNotificationEnabled() ? ReminderAlarm.SET : ReminderAlarm.CANCEL);
-        }
         return initialReminder;
 
     }

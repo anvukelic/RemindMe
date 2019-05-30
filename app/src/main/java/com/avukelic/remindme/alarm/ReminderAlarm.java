@@ -15,6 +15,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.avukelic.remindme.R;
+import com.avukelic.remindme.data.model.Reminder;
 import com.avukelic.remindme.view.reminder.AddNewReminderActivity;
 import com.avukelic.remindme.view.reminder.SingleReminderActivity;
 
@@ -37,10 +38,9 @@ public class ReminderAlarm extends BroadcastReceiver {
         Intent intent = new Intent(context, ReminderAlarm.class);
         intent.putExtra(REMINDER_BUNDLE, extras);
         PendingIntent pendingIntent =
-                PendingIntent.getBroadcast(context, extras.getInt(AddNewReminderActivity.NEW_REMINDER_ID_KEY), intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.getBroadcast(context, extras.getInt(AddNewReminderActivity.NEW_REMINDER_ID_KEY), intent, PendingIntent.FLAG_CANCEL_CURRENT);
         if (action == SET) {
-            alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToTrigger,
+            alarmMgr.set(AlarmManager.RTC_WAKEUP, timeToTrigger,
                     pendingIntent);
         } else {
             alarmMgr.cancel(pendingIntent);
@@ -52,11 +52,24 @@ public class ReminderAlarm extends BroadcastReceiver {
         // here you can get the extras you passed in when creating the alarm
         Bundle bundle = intent.getBundleExtra(REMINDER_BUNDLE);
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
+        int id = bundle.getInt(AddNewReminderActivity.NEW_REMINDER_ID_KEY, -1);
+        int priority = bundle.getInt(AddNewReminderActivity.NEW_REMINDER_PRIORITY_KEY, R.color.colorPrimary);
+        int priorityColor = R.color.colorPrimary;
+        switch (priority) {
+            case 1:
+                priorityColor = R.color.colorPriorityLow;
+                break;
+            case 2:
+                priorityColor = R.color.colorPriorityMedium;
+                break;
+            case 3:
+                priorityColor = R.color.colorPriorityHigh;
+                break;
+        }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "10001")
                 .setSmallIcon(R.drawable.ic_action_add)
                 .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
-                .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                .setColor(ContextCompat.getColor(context, priorityColor))
                 .setContentTitle(context.getString(R.string.push_title))
                 .setContentText(bundle.getString(AddNewReminderActivity.NEW_REMINDER_TITLE_KEY))
                 .setContentIntent(getPendingIntent(context, bundle.getInt(AddNewReminderActivity.NEW_REMINDER_ID_KEY)))
@@ -74,7 +87,7 @@ public class ReminderAlarm extends BroadcastReceiver {
             manager.createNotificationChannel(notificationChannel);
         }
 
-        pushNotification(manager, builder.build());
+        pushNotification(manager, builder.build(), id);
     }
 
     private PendingIntent getPendingIntent(Context context, int reminderId) {
@@ -83,7 +96,7 @@ public class ReminderAlarm extends BroadcastReceiver {
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    protected void pushNotification(NotificationManager manager, Notification notification) {
-        manager.notify(101, notification);
+    protected void pushNotification(NotificationManager manager, Notification notification, int reminderId) {
+        manager.notify(reminderId, notification);
     }
 }

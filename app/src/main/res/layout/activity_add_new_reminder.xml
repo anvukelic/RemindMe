@@ -13,7 +13,8 @@
         android:id="@+id/toolbar_new_reminder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary" />
+        android:background="@color/colorPrimary"
+        app:titleTextColor="@android:color/white" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -92,9 +93,9 @@
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_push_notification_reminder"
                 style="@style/SwitchCompatTheme"
-                android:layout_marginTop="@dimen/margin_default"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_default"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_remind_me_on_time" />
 
@@ -117,36 +118,33 @@
 
                 <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/cb_priority_low"
+                    style="@style/PriorityCheckBoxStyle"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_weight="1"
                     android:background="@drawable/priority_low_checkbox"
-                    android:button="@null"
                     android:checked="true"
-                    android:text="@string/priority_low"
-                    android:textAlignment="center" />
+                    android:text="@string/priority_low" />
 
                 <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/cb_priority_medium"
+                    style="@style/PriorityCheckBoxStyle"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_marginStart="@dimen/margin_default"
                     android:layout_marginEnd="@dimen/margin_default"
                     android:layout_weight="1"
                     android:background="@drawable/priority_medium_checkbox"
-                    android:button="@null"
-                    android:text="@string/priority_medium"
-                    android:textAlignment="center" />
+                    android:text="@string/priority_medium" />
 
                 <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/cb_priority_high"
+                    style="@style/PriorityCheckBoxStyle"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_weight="1"
                     android:background="@drawable/priority_high_checkbox"
-                    android:button="@null"
-                    android:text="@string/priority_high"
-                    android:textAlignment="center" />
+                    android:text="@string/priority_high" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 

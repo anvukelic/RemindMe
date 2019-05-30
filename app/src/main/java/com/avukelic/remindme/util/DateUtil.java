@@ -8,8 +8,8 @@ import java.util.Date;
 @SuppressLint("SimpleDateFormat")
 public class DateUtil {
 
-    public static final String DATE_FORMAT = "yyyy-MM-dd";
-    public static final String TIME_FORMAT = "hh:mm";
+    public static final String DATE_FORMAT = "dd.MM.yyyy.";
+    public static final String TIME_FORMAT = "HH:mm";
 
     public static boolean isPickedDayBeforeToday(String date) {
         long now = new Date().getTime();
@@ -25,7 +25,7 @@ public class DateUtil {
     }
 
     public static long parseDateFromString(String date) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT + " " + TIME_FORMAT);
         return dateFormat.parse(date).getTime();
     }
 

@@ -116,7 +116,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
         public void setData(Reminder reminder) {
             task.setText(reminder.getTaskTitle());
-            deadline.setText(DateUtil.parseDateFromLongToString(reminder.getDeadLine()));
+            deadline.setText(!reminder.isInPast() ? itemView.getContext().getString(R.string.deadline_error_message) : DateUtil.parseDateFromLongToString(reminder.getDeadLine()));
             switch (reminder.getPriority()) {
                 case LOW:
                     GlideUtil.loadColor(itemView.getContext(), priorityBox, R.color.colorPriorityLow);

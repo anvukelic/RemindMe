@@ -8,6 +8,7 @@
         android:id="@+id/toolbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:titleTextColor="@android:color/white"
         android:background="@color/colorPrimary"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -19,6 +20,7 @@
         android:background="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_main">
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_reminders"
@@ -34,9 +36,9 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorAccent"
             android:elevation="@dimen/elevation_small"
-            app:fabSize="mini"
             app:backgroundTint="@color/colorPrimary"
             app:borderWidth="0dp"
+            app:fabSize="mini"
             app:layout_anchor="@id/bottom_app_bar"
             app:srcCompat="@drawable/ic_action_add" />
 
@@ -52,4 +54,30 @@
             app:navigationIcon="@drawable/ic_action_menu" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/empty_screen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_no_items" />
+        <TextView
+            android:layout_marginTop="@dimen/margin_default"
+            android:text="@string/assign_your_first_task"
+            android:textColor="@color/colorPrimary"
+            android:textAlignment="center"
+            android:textSize="@dimen/text_default"
+            android:lines="3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -27,4 +27,6 @@
     <string name="dialog_confirm">Yes</string>
     <string name="dialog_decline">No</string>
     <string name="reminder_is_updated">Your reminder is updated</string>
+    <string name="assign_your_first_task">Assign your first task</string>
+    <string name="deadline_error_message">I reminded you for this task</string>
 </resources>

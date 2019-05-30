@@ -2,21 +2,20 @@ package com.avukelic.remindme.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.avukelic.remindme.R;
 import com.avukelic.remindme.RemindMeApp;
+import com.avukelic.remindme.alarm.ReminderAlarm;
 import com.avukelic.remindme.base.BaseActivity;
 import com.avukelic.remindme.data.model.Reminder;
 import com.avukelic.remindme.singleton.FirebaseDatabaseSingleton;
@@ -29,10 +28,16 @@ import com.avukelic.remindme.widgets.DrawerBottomSheet;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static com.avukelic.remindme.view.reminder.AddNewReminderActivity.NEW_REMINDER_ID_KEY;
+import static com.avukelic.remindme.view.reminder.AddNewReminderActivity.NEW_REMINDER_PRIORITY_KEY;
+import static com.avukelic.remindme.view.reminder.AddNewReminderActivity.NEW_REMINDER_TITLE_KEY;
 
 public class MainActivity extends BaseActivity implements DrawerBottomSheet.DrawerBottomSheetActionCallback, ReminderAdapter.OnReminderClickListener {
 
@@ -51,6 +56,8 @@ public class MainActivity extends BaseActivity implements DrawerBottomSheet.Draw
     RecyclerView recyclerView;
     @BindView(R.id.toolbar_main)
     Toolbar toolbar;
+    @BindView(R.id.empty_screen)
+    LinearLayout emptyScreen;
 
     @OnClick(R.id.fab_add_reminder)
     void onFabClicked() {
@@ -93,7 +100,27 @@ public class MainActivity extends BaseActivity implements DrawerBottomSheet.Draw
     }
 
     private void observeData() {
-        viewModel.getMediatorLiveData().observe(this, reminders -> reminderAdapter.setReminders(reminders));
+        viewModel.getMediatorLiveData().observe(this, reminders -> {
+            if (reminders.size() > 0) {
+                reminderAdapter.setReminders(reminders);
+                setAlarmForReminders(reminders);
+                hideEmptyScreen();
+            } else {
+                showEmptyScreen();
+            }
+        });
+    }
+
+    private void setAlarmForReminders(List<Reminder> reminders) {
+        for (Reminder reminder : reminders) {
+            if (reminder.isNotificationEnabled() && reminder.isInPast()) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(NEW_REMINDER_ID_KEY, reminder.getId());
+                bundle.putString(NEW_REMINDER_TITLE_KEY, reminder.getTaskTitle());
+                bundle.putInt(NEW_REMINDER_PRIORITY_KEY, reminder.getPriority().getType());
+                new ReminderAlarm(this, bundle, reminder.getDeadLine() /*- 120000*/, ReminderAlarm.SET);
+            }
+        }
     }
 
     private void initToolbar() {
@@ -142,5 +169,13 @@ public class MainActivity extends BaseActivity implements DrawerBottomSheet.Draw
                 .setNegativeButton(R.string.dialog_decline, (dialog, which) -> dialog.dismiss())
                 .create()
                 .show();
+    }
+
+    private void showEmptyScreen() {
+        emptyScreen.setVisibility(View.VISIBLE);
+    }
+
+    private void hideEmptyScreen() {
+        emptyScreen.setVisibility(View.GONE);
     }
 }

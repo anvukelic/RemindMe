@@ -43,17 +43,18 @@ public class TextUtil {
 
     public static String formatDate(int year, int month, int day){
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(year);
-        stringBuilder.append("-");
-        if (month < 9) {
-            stringBuilder.append("0");
-        }
-        stringBuilder.append(month + 1);
-        stringBuilder.append("-");
         if (day < 10) {
             stringBuilder.append("0");
         }
         stringBuilder.append(day);
+        stringBuilder.append(".");
+        if (month < 9) {
+            stringBuilder.append("0");
+        }
+        stringBuilder.append(month + 1);
+        stringBuilder.append(".");
+        stringBuilder.append(year);
+        stringBuilder.append(".");
         return stringBuilder.toString();
     }
 

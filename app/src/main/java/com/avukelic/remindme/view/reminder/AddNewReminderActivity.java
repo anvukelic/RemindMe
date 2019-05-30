@@ -44,6 +44,7 @@ public class AddNewReminderActivity extends BaseActivity implements DatePickerDi
 
     public static final String NEW_REMINDER_ID_KEY = AddNewReminderActivity.class.getSimpleName() + ".new_reminder_id";
     public static final String NEW_REMINDER_TITLE_KEY = AddNewReminderActivity.class.getSimpleName() + ".new_reminder_title";
+    public static final String NEW_REMINDER_PRIORITY_KEY = AddNewReminderActivity.class.getSimpleName() + ".new_reminder_priority";
 
     @Inject
     public ReminderViewModelFactory reminderViewModelFactory;
@@ -73,7 +74,9 @@ public class AddNewReminderActivity extends BaseActivity implements DatePickerDi
     void onPriorityChanged(View view) {
         for (AppCompatRadioButton priorityCheckBox : priorityCheckBoxes) {
             priorityCheckBox.setChecked(view.getId() == priorityCheckBox.getId());
-            priority = Reminder.Priority.values()[priorityCheckBoxes.indexOf(priorityCheckBox)];
+            if (view.getId() == priorityCheckBox.getId()) {
+                priority = Reminder.Priority.values()[priorityCheckBoxes.indexOf(priorityCheckBox)];
+            }
         }
 
     }
@@ -164,10 +167,10 @@ public class AddNewReminderActivity extends BaseActivity implements DatePickerDi
     //region Date picker
     private void openDatePicker() {
         final Calendar c = Calendar.getInstance();
-        String[] date = remindMeOnDate.getText().toString().split("-");
-        int year = remindMeOnDate.getText().toString().isEmpty() ? c.get(Calendar.YEAR) : Integer.parseInt(date[0]);
+        String[] date = remindMeOnDate.getText().toString().split(".");
+        int year = remindMeOnDate.getText().toString().isEmpty() ? c.get(Calendar.YEAR) : Integer.parseInt(date[2]);
         int month = remindMeOnDate.getText().toString().isEmpty() ? c.get(Calendar.MONTH) : Integer.parseInt(date[1]) - 1;
-        int days = remindMeOnDate.getText().toString().isEmpty() ? c.get(Calendar.DAY_OF_MONTH) : Integer.parseInt(date[2]);
+        int days = remindMeOnDate.getText().toString().isEmpty() ? c.get(Calendar.DAY_OF_MONTH) : Integer.parseInt(date[0]);
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.DialogTheme, this, year, month, days);
         datePickerDialog.setOnCancelListener(this);
         datePickerDialog.setOnDismissListener(this);
@@ -201,18 +204,11 @@ public class AddNewReminderActivity extends BaseActivity implements DatePickerDi
     //Create reminder object and set alarm for notification
     private Reminder getReminder() throws ParseException {
         long time = DateUtil.parseDateFromString(getDateTime());
-        Reminder reminder = new Reminder(taskInput.getText().toString().trim(),
+        return new Reminder(taskInput.getText().toString().trim(),
                 titleInput.getText().toString().trim(),
                 time,
                 priority,
                 notificationSwitch.isChecked());
-        if (notificationSwitch.isChecked()) {
-            Bundle bundle = new Bundle();
-            bundle.putInt(NEW_REMINDER_ID_KEY, reminder.getId());
-            bundle.putString(NEW_REMINDER_TITLE_KEY, titleInput.getText().toString().trim());
-            new ReminderAlarm(this, bundle, time /*- 120000*/, ReminderAlarm.SET);
-        }
-        return reminder;
 
     }
 

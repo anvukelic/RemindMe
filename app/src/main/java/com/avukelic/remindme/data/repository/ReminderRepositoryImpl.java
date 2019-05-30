@@ -46,6 +46,8 @@ public class ReminderRepositoryImpl implements ReminderRepository {
                     }
                     UserSingleton.getInstance().setLastReminderId(reminders.get(reminders.size() - 1).getId());
                     reminderLiveData.setValue(reminders);
+                } else {
+                    reminderLiveData.setValue(new ArrayList<>());
                 }
             }
 

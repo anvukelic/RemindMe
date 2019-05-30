@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.avukelic.remindme.singleton.UserSingleton;
 
+import java.util.Date;
+
 public class Reminder implements Parcelable {
 
 
@@ -61,6 +63,10 @@ public class Reminder implements Parcelable {
 
     public long getDeadLine() {
         return deadLine;
+    }
+
+    public boolean isInPast(){
+        return deadLine > new Date().getTime();
     }
 
     public void setDeadLine(long deadLine) {
