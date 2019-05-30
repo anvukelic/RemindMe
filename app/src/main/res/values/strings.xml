@@ -22,4 +22,9 @@
     <string name="single_reminder_toolbar_title">Reminder</string>
     <string name="new_reminder_toolbar_title">New reminder</string>
     <string name="login_not_successful">Username or password are incorrect</string>
+    <string name="delete_dialog_title">Are you done?</string>
+    <string name="delete_dialog_message">You are about to delete reminder. Are you sure?</string>
+    <string name="dialog_confirm">Yes</string>
+    <string name="dialog_decline">No</string>
+    <string name="reminder_is_updated">Your reminder is updated</string>
 </resources>

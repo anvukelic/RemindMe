@@ -2,8 +2,12 @@ package com.avukelic.remindme.view.reminder;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -15,25 +19,39 @@ import android.widget.Toast;
 import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.avukelic.remindme.R;
 import com.avukelic.remindme.RemindMeApp;
+import com.avukelic.remindme.alarm.ReminderAlarm;
 import com.avukelic.remindme.base.BaseActivity;
 import com.avukelic.remindme.data.model.Reminder;
 import com.avukelic.remindme.util.DateUtil;
 import com.avukelic.remindme.util.TextUtil;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.OnClick;
 
-public class SingleReminderActivity extends BaseActivity implements DatePickerDialog.OnDateSetListener,
-        DialogInterface.OnCancelListener, DialogInterface.OnDismissListener, TimePickerDialog.OnTimeSetListener {
+import static com.avukelic.remindme.view.reminder.AddNewReminderActivity.NEW_REMINDER_ID_KEY;
+import static com.avukelic.remindme.view.reminder.AddNewReminderActivity.NEW_REMINDER_TITLE_KEY;
 
+public class SingleReminderActivity extends BaseActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+
+    public static final String SINGLE_REMINDER_KEY = SingleReminderActivity.class.getSimpleName() + ".bundle_single_reminder";
+
+    @Inject
+    public ReminderViewModelFactory factory;
+    private ReminderViewModel viewModel;
     private Reminder.Priority priority;
+    private Reminder initialReminder;
 
     //region ButterKnife
     @BindView(R.id.toolbar_new_reminder)
@@ -73,6 +91,12 @@ public class SingleReminderActivity extends BaseActivity implements DatePickerDi
 
     //endregion
 
+    public static void launchActivity(Context context, Reminder reminder) {
+        Intent intent = new Intent(context, SingleReminderActivity.class);
+        intent.putExtra(SINGLE_REMINDER_KEY, reminder);
+        context.startActivity(intent);
+    }
+
     @Override
     protected int getLayout() {
         return R.layout.activity_add_new_reminder;
@@ -88,13 +112,61 @@ public class SingleReminderActivity extends BaseActivity implements DatePickerDi
     @Override
     protected void initViewModel() {
         RemindMeApp.getAppComponent().inject(this);
+        viewModel = ViewModelProviders.of(this, factory).get(ReminderViewModel.class);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_single_reminder, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return super.onOptionsItemSelected(item);
+        }
+
+        if (item.getItemId() == R.id.update_reminder) {
+            boolean inputError = TextUtil.isInputValid(this, taskInput)
+                    | TextUtil.isInputValid(this, titleInput)
+                    | TextUtil.isInputValid(this, remindMeOnDate)
+                    | TextUtil.isInputValid(this, remindMeOnTime);
+            if (!inputError) {
+                try {
+                    viewModel.addReminder(getReminder()).observeSingle(this, reminder -> {
+                        shortToast(getString(R.string.reminder_is_updated));
+                        finish();
+                    });
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
 
     private void initData() {
         Intent intent = getIntent();
         if (intent != null) {
-            titleInput.setText("Test");
+            initialReminder = getIntent().getParcelableExtra(SINGLE_REMINDER_KEY);
+        } else {
+            return;
         }
+        initViewWithData();
+    }
+
+    private void initViewWithData() {
+        taskInput.setText(initialReminder.getTask());
+        titleInput.setText(initialReminder.getTaskTitle());
+        String[] dateTime = DateUtil.getDateTime(initialReminder.getDeadLine());
+        remindMeOnDate.setText(dateTime[1]);
+        remindMeOnTime.setText(dateTime[0]);
+        notificationSwitch.setChecked(initialReminder.isNotificationEnabled());
+        priorityCheckBoxes.get(initialReminder.getPriority().getType() - 1).performClick();
     }
 
     //region Time picker
@@ -122,8 +194,6 @@ public class SingleReminderActivity extends BaseActivity implements DatePickerDi
         int month = remindMeOnDate.getText().toString().isEmpty() ? c.get(Calendar.MONTH) : Integer.parseInt(date[1]) - 1;
         int days = remindMeOnDate.getText().toString().isEmpty() ? c.get(Calendar.DAY_OF_MONTH) : Integer.parseInt(date[2]);
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.DialogTheme, this, year, month, days);
-        datePickerDialog.setOnCancelListener(this);
-        datePickerDialog.setOnDismissListener(this);
         datePickerDialog.show();
         TextUtil.setAlertDialogButtons(this, datePickerDialog);
     }
@@ -138,14 +208,26 @@ public class SingleReminderActivity extends BaseActivity implements DatePickerDi
             Toast.makeText(this, R.string.date_pick_error_message_before, Toast.LENGTH_SHORT).show();
         }
     }
-
-    @Override
-    public void onCancel(DialogInterface dialog) {
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-
-    }
     //endregion
+
+    private String getDateTime() {
+        return remindMeOnDate.getText().toString().trim() + " " + remindMeOnTime.getText().toString().trim();
+    }
+
+    private Reminder getReminder() throws ParseException {
+        long time = DateUtil.parseDateFromString(getDateTime());
+        initialReminder.setTaskTitle(titleInput.getText().toString().trim());
+        initialReminder.setTask(taskInput.getText().toString().trim());
+        initialReminder.setDeadLine(time);
+        initialReminder.setNotificationEnabled(notificationSwitch.isChecked());
+        initialReminder.setPriority(priority);
+        if (notificationSwitch.isChecked()) {
+            Bundle bundle = new Bundle();
+            bundle.putInt(NEW_REMINDER_ID_KEY, initialReminder.getId());
+            bundle.putString(NEW_REMINDER_TITLE_KEY, titleInput.getText().toString().trim());
+            new ReminderAlarm(this, bundle, time /*- 120000*/, initialReminder.isNotificationEnabled() ? ReminderAlarm.SET : ReminderAlarm.CANCEL);
+        }
+        return initialReminder;
+
+    }
 }

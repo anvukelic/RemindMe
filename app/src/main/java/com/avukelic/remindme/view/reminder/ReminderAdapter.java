@@ -1,27 +1,37 @@
 package com.avukelic.remindme.view.reminder;
 
-import android.util.Log;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.avukelic.remindme.R;
 import com.avukelic.remindme.data.model.Reminder;
 import com.avukelic.remindme.util.DateUtil;
 import com.avukelic.remindme.util.GlideUtil;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder> {
@@ -66,28 +76,45 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         return reminders.get(position);
     }
 
+    public int removeReminder(int position){
+        notifyItemRemoved(position);
+        int id = reminders.get(position).getId();
+        reminders.remove(position);
+        return id;
+    }
+
+
     class ReminderViewHolder extends RecyclerView.ViewHolder {
 
         //region ButterKnife
+        @BindView(R.id.cv_root)
+        MaterialCardView cardView;
         @BindView(R.id.taskTitle)
         AppCompatTextView task;
         @BindView(R.id.deadline)
         AppCompatTextView deadline;
         @BindView(R.id.priority_box)
         ImageView priorityBox;
+
+        ReminderViewHolder(@NonNull View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
         //endregion
 
-        @OnClick
+        @OnClick(R.id.cl_root_reminder_item)
         void onItemClick() {
             listener.onReminderClick(getAdapterPosition());
         }
 
-        ReminderViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+        @OnLongClick(R.id.cl_root_reminder_item)
+        boolean onItemLongClick(){
+            listener.onReminderLongPress(getAdapterPosition());
+            return true;
         }
 
-        void setData(Reminder reminder) {
+
+        public void setData(Reminder reminder) {
             task.setText(reminder.getTaskTitle());
             deadline.setText(DateUtil.parseDateFromLongToString(reminder.getDeadLine()));
             switch (reminder.getPriority()) {
@@ -106,5 +133,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
     public interface OnReminderClickListener {
         void onReminderClick(int position);
+        void onReminderLongPress(int position);
     }
 }

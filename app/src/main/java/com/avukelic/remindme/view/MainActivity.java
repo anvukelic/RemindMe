@@ -4,20 +4,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.avukelic.remindme.R;
 import com.avukelic.remindme.RemindMeApp;
 import com.avukelic.remindme.base.BaseActivity;
-import com.avukelic.remindme.singleton.UserSingleton;
+import com.avukelic.remindme.data.model.Reminder;
+import com.avukelic.remindme.singleton.FirebaseDatabaseSingleton;
 import com.avukelic.remindme.view.reminder.AddNewReminderActivity;
 import com.avukelic.remindme.view.reminder.ReminderAdapter;
 import com.avukelic.remindme.view.reminder.ReminderViewModel;
 import com.avukelic.remindme.view.reminder.ReminderViewModelFactory;
+import com.avukelic.remindme.view.reminder.SingleReminderActivity;
 import com.avukelic.remindme.widgets.DrawerBottomSheet;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -111,24 +118,29 @@ public class MainActivity extends BaseActivity implements DrawerBottomSheet.Draw
         reminderAdapter = new ReminderAdapter();
         reminderAdapter.setListener(this);
         recyclerView.setAdapter(reminderAdapter);
-        /*List<Reminder> reminders = new ArrayList<>();
-        reminders.add(new Reminder( "test", "test", 535353, Reminder.Priority.LOW));
-        reminders.add(new Reminder( "test2", "test", 5353535, Reminder.Priority.LOW));
-        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.MEDIUM));
-        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.LOW));
-        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.HIGH));
-        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.LOW));
-        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.LOW));
-        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.LOW));
-        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.MEDIUM));
-        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.LOW));
-        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.MEDIUM));
-        reminders.add(new Reminder("test3", "test", 5353536, Reminder.Priority.HIGH));
-        reminderAdapter.setReminders(reminders);*/
     }
 
     @Override
     public void onReminderClick(int position) {
+        Reminder reminder = reminderAdapter.getReminder(position);
+        SingleReminderActivity.launchActivity(this, reminder);
+    }
 
+    @Override
+    public void onReminderLongPress(int position) {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.delete_dialog_message)
+                .setPositiveButton(R.string.dialog_confirm, (dialog, which) -> {
+                    int reminderId = reminderAdapter.removeReminder(position);
+                    FirebaseDatabaseSingleton
+                            .getInstance()
+                            .getReminderDatabaseReference()
+                            .child(String.valueOf(reminderId))
+                            .removeValue();
+
+                })
+                .setNegativeButton(R.string.dialog_decline, (dialog, which) -> dialog.dismiss())
+                .create()
+                .show();
     }
 }

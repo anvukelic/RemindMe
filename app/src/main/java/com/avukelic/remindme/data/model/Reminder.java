@@ -14,14 +14,17 @@ public class Reminder implements Parcelable {
     private String taskTitle;
     private long deadLine;
     private Priority priority;
+    private boolean notificationEnabled;
 
-    public Reminder(String task, String taskTitle, long deadLine, Priority priority) {
+    public Reminder(String task, String taskTitle, long deadLine, Priority priority, boolean notificationEnabled) {
         id = UserSingleton.getInstance().getLastReminderId();
         this.task = task;
         this.taskTitle = taskTitle;
         this.deadLine = deadLine;
         this.priority = priority;
+        this.notificationEnabled = notificationEnabled;
     }
+
 
     protected Reminder(Parcel in) {
         id = in.readInt();
@@ -29,6 +32,7 @@ public class Reminder implements Parcelable {
         taskTitle = in.readString();
         deadLine = in.readLong();
         priority = Priority.valueOf(in.readString());
+        notificationEnabled = in.readByte() != 0;
     }
 
     public static final Creator<Reminder> CREATOR = new Creator<Reminder>() {
@@ -79,6 +83,17 @@ public class Reminder implements Parcelable {
         this.taskTitle = taskTitle;
     }
 
+    public boolean isNotificationEnabled() {
+        return notificationEnabled;
+    }
+
+    public void setNotificationEnabled(boolean notificationEnabled) {
+        this.notificationEnabled = notificationEnabled;
+    }
+
+    public Reminder() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -91,9 +106,7 @@ public class Reminder implements Parcelable {
         dest.writeString(taskTitle);
         dest.writeLong(deadLine);
         dest.writeString(priority.name());
-    }
-
-    public Reminder() {
+        dest.writeByte((byte) (notificationEnabled ? 1 : 0));
     }
 
 

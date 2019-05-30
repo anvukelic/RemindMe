@@ -20,6 +20,8 @@ import com.avukelic.remindme.view.reminder.SingleReminderActivity;
 
 public class ReminderAlarm extends BroadcastReceiver {
     private final String REMINDER_BUNDLE = "MyReminderBundle";
+    public static final int CANCEL = 0;
+    public static final int SET = 1;
 
     // this constructor is called by the alarm manager.
     public ReminderAlarm() {
@@ -29,7 +31,7 @@ public class ReminderAlarm extends BroadcastReceiver {
     //  Just pass in the main activity as the context, 
     //  any extras you'd like to get later when triggered 
     //  and the timeout
-    public ReminderAlarm(Context context, Bundle extras, long timeToTrigger) {
+    public ReminderAlarm(Context context, Bundle extras, long timeToTrigger, int action) {
         AlarmManager alarmMgr =
                 (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, ReminderAlarm.class);
@@ -37,8 +39,12 @@ public class ReminderAlarm extends BroadcastReceiver {
         PendingIntent pendingIntent =
                 PendingIntent.getBroadcast(context, extras.getInt(AddNewReminderActivity.NEW_REMINDER_ID_KEY), intent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToTrigger,
-                pendingIntent);
+        if (action == SET) {
+            alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToTrigger,
+                    pendingIntent);
+        } else {
+            alarmMgr.cancel(pendingIntent);
+        }
     }
 
     @Override

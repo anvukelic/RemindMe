@@ -1,6 +1,5 @@
 package com.avukelic.remindme.view.reminder;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -141,9 +140,7 @@ public class AddNewReminderActivity extends BaseActivity implements DatePickerDi
                 }
             }
         }
-        return super.
-
-                onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
 
     }
 
@@ -207,12 +204,13 @@ public class AddNewReminderActivity extends BaseActivity implements DatePickerDi
         Reminder reminder = new Reminder(taskInput.getText().toString().trim(),
                 titleInput.getText().toString().trim(),
                 time,
-                priority);
+                priority,
+                notificationSwitch.isChecked());
         if (notificationSwitch.isChecked()) {
             Bundle bundle = new Bundle();
             bundle.putInt(NEW_REMINDER_ID_KEY, reminder.getId());
             bundle.putString(NEW_REMINDER_TITLE_KEY, titleInput.getText().toString().trim());
-            new ReminderAlarm(this, bundle, time /*- 120000*/);
+            new ReminderAlarm(this, bundle, time /*- 120000*/, ReminderAlarm.SET);
         }
         return reminder;
 

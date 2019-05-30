@@ -39,6 +39,7 @@ public class SplashScreen extends AppCompatActivity {
             } else {
                 LoginActivity.launchActivity(SplashScreen.this);
             }
+            finish();
         }, SPLASH_SLEEP);
     }
 }
